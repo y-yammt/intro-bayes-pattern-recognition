@@ -1,0 +1,584 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="all" href="theme/css/additional.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+  <!--
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/google_developers_logo.png"></span>
+    </article>
+  </slide>
+  -->
+
+  <slide class="title-slide segue nobackground">
+    <!--
+    <aside class="gdbar"><img src="images/google_developers_icon_128.png"></aside>
+    -->
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>自己紹介 &amp; お知らせ</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li><a href="https://twitter.com/y_yammt">@y_yammt</a></li>
+        <ul>
+          <li>某Web系エンジニア</li>
+        </ul>
+      </ul>
+      <div class="large-spacer">
+        <div class="aa">
+ 　　　､､┯､､<br>
+　　 ﾐ (･)(･)ﾐ　　<span class="reset-font">本スライドは<a href="http://y-yammt.github.io/intro-bayes-pattern-recognition">http://y-yammt.github.io/intro-bayes-pattern-recognition</a> で見られますぞ、と</span><br>
+　　彡　д　ミ<br>
+　　彡　　/￣￣￣￣/<br>
+＿彡ﾆつ/　 Macc　/＿＿<br>
+　　　＼/＿＿＿＿/ 
+        </div>
+      </div>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>今回の内容</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>入門ベイズ統計 第4章「ベイズ判別問題とパターン認識」を見ていきます。</li>
+        <ul>
+          <li>4.5 パターン認識と分類</li>
+          <li>4.6 ベイズ決定による判別(分類)</li>
+          <li>4.7 判別分析</li>
+        </ul>
+        <li class="mid-spacer">また、一部<a href="http://www.amazon.co.jp/dp/4274131491" title="わかりやすいパターン認識">「わかりやすいパターン認識」</a>の内容を参考にしています。</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <article class="flexbox vleft">
+      <h2>4.5 パターン認識と分類</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>パターン認識</h2>
+    </hgroup>
+    <article>
+      <dl>
+      <dt class="mid-spacer">パターン</dt>
+      <dd>多様な図形・画像・音声などの(パターン認識をするための)対象</dd>
+      </dl>
+      <div class="large-spacer">
+      <div class="frame-border">
+      <span><strong>パターン認識</strong></span>
+      <ul class="mid-spacer">
+        <li>実は定義しにくい言葉(上から下にかけて広義から狭義の定義になっている)</li>
+        <ul>
+          <li>「雑多な情報を含むデータの中から、意味を持つ<span class="red">対象を選別して取り出す処理</span>」(<a href="http://ja.wikipedia.org/wiki/%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E8%AA%8D%E8%AD%98" title="日本語版Wikipedia「パターン認識」">日本語版Wikipedia「パターン認識」</a>)</li>
+          <li>「対象(パターン)を，概念(類)に分類要約して，それに<span class="red">対応付け</span>ること」(<a href="http://www.amazon.co.jp/dp/4489020368" title="入門ベイズ統計">「入門ベイズ統計」</a>)</li>
+          <li>「観測されたパターンをあらかじめ定められた複数の概念のうちの<span class="red">一つに対応</span>させる処理」(<a href="http://www.amazon.co.jp/dp/4274131491" title="わかりやすいパターン認識">「わかりやすいパターン認識」</a>)</li>
+        </ul>
+        <li>多くの場合は事前に定義してから使われているはず・・・</li>
+      </ul>
+      </div>
+      </div>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>「パターン認識」という言葉を使うときに注意する点</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>概念(パターンの対応先)は決まっているか?</li>
+        <ul>
+          <li>決まっていない(よしなに決めてほしい) &rarr; 教師なし学習</li>
+        </ul>
+        <ul>
+          <li>決まっている &rarr; 教師あり学習</li>
+          <ul>
+            <li>このときの概念を<strong>カテゴリー</strong>と呼ぶ(クラスと呼ぶことも多い。「入門ベイズ統計」では「カテゴリー」を採用している。本スライドではカテゴリーとクラスを同義で使用します。</li>
+            <li>パターンとそれが属するクラスがわかっているデータ(訓練データ)がある(はず・・・)。</li>
+            <ul>
+              <li><span class="red">クラスが2個</span>で、どのクラスに属するかを決める分類: <strong>二値分類</strong></li>
+              <li><span class="red">クラスが複数</span>あり、<span class="red">どのクラス(1つ)に属するのか</span>を決める分類: <strong>多クラス分類</strong></li>
+              <li><span class="red">クラスが複数</span>あり、<span class="red">それらの部分集合のどれに属するのか</span>を決める分類: <strong>多ラベル分類</strong></li>
+            </ul>
+          </ul>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>「入門ベイズ統計」でのパターン認識</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>概念(パターンの対応先)は決まっているか?</li>
+        <ul>
+          <li><span class="red">決まっている</span></li>
+          <ul>
+            <li>画像データの文字から<strong>文字コード</strong>への対応 (OCR)</li>
+            <li>花の各部の長さのデータから<strong>該当する花</strong>への対応 (フィッシャーのあやめ)</li>
+          </ul>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>「入門ベイズ統計」でのパターン認識</h2>
+    </hgroup>
+    <article>
+      <ul class="gray-out">
+        <li>概念(パターンの対応先)は決まっているか?</li>
+        <ul>
+          <li>決まっている</li>
+        </ul>
+      </ul>
+      <ul class="build">
+        <li>クラスの数は?</li>
+        <ul>
+          <li><span class="red">複数</span></li>
+          <ul>
+            <li>認識したい文字の種類数 + リジェクト用クラス? (OCR)</li>
+            <li>3つ(ヴァージニカ、ヴェルシカラー、セトーサ) (フィッシャーのあやめ)</li>
+          </ul>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>「入門ベイズ統計」でのパターン認識</h2>
+    </hgroup>
+    <article>
+      <ul class="gray-out">
+        <li>概念(パターンの対応先)は決まっているか?</li>
+        <ul>
+          <li>決まっている</li>
+        </ul>
+        <li>クラスの数は?</li>
+        <ul>
+          <li>複数</li>
+        </ul>
+      </ul>
+      <ul class="build">
+        <li>対応の仕方は?</li>
+        <ul>
+          <li><span class="red">1つに決める</span></li>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>「入門ベイズ統計」でのパターン認識</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>概念(パターンの対応先)は決まっているか?</li>
+        <ul>
+          <li>決まっている</li>
+        </ul>
+        <li>クラスの数は?</li>
+        <ul>
+          <li>複数</li>
+        </ul>
+        <li>対応の仕方は?</li>
+        <ul>
+          <li>1つに決める</li>
+        </ul>
+      </ul>
+      <div class="large-spacer">
+      <div class="frame-border">
+      <ul class="mid-spacer">
+        <ul>
+          <li>&rarr; <strong>多クラス分類</strong></li>
+          <li>「観測されたパターンをあらかじめ定められた複数の概念のうちの一つに対応させる処理」</li>
+        </ul>
+      </ul>
+      </div>
+      </div>
+    </article>
+  </slide>
+
+  <slide>
+    <article class="flexbox vleft">
+      <h2>4.6 ベイズ決定による判別 (分類)</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>パターンと特徴抽出</h2>
+    </hgroup>
+    <article>
+      <div style="text-align:center;">
+        <img src="images/intro-bayes-4-11.png" style="height:300px;width:auto;" alt="特徴抽出"><br>
+      </div>
+      <dl>
+        <dt class="large-spacer">特徴抽出</dt>
+        <dd>分類カテゴリーとわかるための主要な特徴を選び出して、パターン認識を行うためのベクトル(特徴ベクトル)を生成すること</dd>
+      </dl>
+     <footer class="source">「入門ベイズ統計」図4.11より</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>フィッシャーのあやめ</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>フィッシャーが分析した「あやめ」(Iris)の例</li>
+        <li>データセットは<a href="http://archive.ics.uci.edu/ml/" title="UCI Machine Learning Repository">UCI Machine Learning Repository</a>から入手できる。</li>
+        <li>カテゴリは以下3種類</li>
+        <ul>
+          <li>$\Pi_1$: ヴァージニカ、$\Pi_2$: ヴェルシカラー、$\Pi_3$: セトーサ (setosa)</li>
+        </ul>
+        <li>特徴ベクトルは4次元 $\mathbf{z} = (x_1, x_2, x_3, x_4)'$ [4 &times; 1 行列] で定義される。ただし、</li>
+        <ul>
+          <li>$x_1$: がく片の長さ</li>
+          <li>$x_2$: がく片の幅</li>
+          <li>$x_3$: 花弁の長さ</li>
+          <li>$x_4$: 花弁の幅</li>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>ベイズ判別によるパターン認識</h2>
+      <h3>登場する記号 その1</h3>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>$\Pi_k$: カテゴリー(クラス) &rarr; ヴァージニカ、ヴェルシカラーなど</li>
+        <li>$\mathbf{z}$: (あるパターンの)特徴ベクトル &rarr; がく片の長さ...から構成されるベクトル</li>
+        <li>$\theta_k$: カテゴリー$k$の特徴ベクトルの確率分布を構成するパラメータ</li>
+        <ul>
+          <li><span class="red">すでにカテゴリーがわかっている特徴ベクトルの集合からベイズ決定によって定める。</span></li>
+          <li>例えば多次元正規分布を仮定するなら平均ベクトルと分散共分散行列。</li>
+          <li>カテゴリーは$1$〜$K$なので(特徴ベクトル$\mathbf{z}$が与えられる前の意味での)事前確率は次のように表される:<br>$P(\theta_1) + P(\theta_2) + \dots + P(\theta_K) = w_1 + w_2 + \cdots + w_K = 1$</li>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+ 
+  <slide>
+    <hgroup>
+      <h2>ベイズ判別によるパターン認識</h2>
+      <h3>登場する記号 その2</h3>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>$f_k(\mathbf{z}) = P(\mathbf{z}|\theta_k)$: カテゴリー$k$を取った場合の特徴ベクトルの確率分布</li>
+        <ul>
+          <li>(特徴ベクトル$\mathbf{z}$が与えられた後の意味での)事後確率。
+          <li>例えば「ヴェルシカラー」で、がく片の長さが5.8、がく片幅2.8、花弁長さ4.2、花弁幅1.1の確率が...みたいな</li>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+ 
+  <!--
+  <slide>
+    <hgroup>
+      <h2>パターン認識の道のり (パラメータ決定まで)</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>やること: パラメータ$\mathbf{\theta}$を求める。</li>
+        <li>特徴ベクトルとそのカテゴリーがわかっているデータ集合(訓練データ集合)を用意する。</li>
+        <li>$f_k(\mathbf{z})$の確率分布と損失関数を決める。</li>
+        <li>訓練データ集合の事後期待損失を最小化するようにパラメータ$\theta_1$〜$\theta_K$を決める。</li>
+        <ul>
+          <li>事後確率: $P(\theta_k | \mathbf{z}) = \frac{P(\mathbf{z} | \theta_k) P(\theta_k)}{P(\mathbf{z})} = \frac{w_k f_k(\mathbf{z})}{P(\mathbf{z})}$<br>
+          (※$P(\mathbf{z})$はカテゴリーによって値が変わらないことに注意)</li>
+          <li><strong>妥当な</strong>パラメータを決めることができるように確率分布・損失関数・最小化問題を解くため方法を工夫する。</li>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+  -->
+
+  <slide>
+    <hgroup>
+      <h2>ベイズ決定による分類</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>カテゴリーが未知の特徴ベクトルに対して、事後期待損失が最小になるようにカテゴリーを割り当てる。<br>
+        <div class="large-spacer">&rarr; 以降はパラメータがわかっている下で分類することについての数学的な特性について見ていきます。</div></li>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>ベイズ決定による分類</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>0-1型単純損失の場合、カテゴリー1を取るときの事後期待損失は以下のようになる:<br>
+        $R_1 = \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})} \cdot 0 + \frac{w_2 f_2(\mathbf{z})}{P(\mathbf{z})} \cdot 1 + \cdots + \frac{w_2 f_2(\mathbf{z})}{P(\mathbf{z})} \cdot 1 = 1 - \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})}$</li>
+        <li>同様にカテゴリー$k$を取るときの事後期待損失は、<br>
+        $R_k = 1 - \frac{w_k f_k(\mathbf{z})}{P(\mathbf{z})}$</li>
+        <li>結局、事後期待損失を最小となるカテゴリ$k$は、<br>
+        $\arg \min_{k} \{1 - \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})}, \cdots, 1 - \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})} \}
+        = \arg \max_k \{w_1 f_1(\mathbf{z}), \cdots, w_1 f_1(\mathbf{z}) \}$<br>
+        を満たす。</li>
+        <li>尤度比の形で書くと、$\frac{f_l(\mathbf{z})}{f_k(\mathbf{z})} \leq \frac{w_k}{w_l}$ ($l \neq k$) となる。</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>ベイズ決定と線型判別関数</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>ここで $f_k(\mathbf{z})$ を多次元正規分布(ただし分散・共分散行列はカテゴリー間で同じもの)とする。</li>
+        <li>つまり、<br>
+        $f_k(\mathbf{z}) = (2 \pi)^{-p/2} |\Sigma|^{-1/2} \exp\{ -\frac{1}{2} (\mathbf{z} - \mathbf{\theta_k})' \Sigma^{-1} (\mathbf{z} - \mathbf{\theta_k})\}$<br>
+        (ただし、$p$は特徴ベクトルの次元数)である。</li>
+        <li>このとき対数尤度比は、<br>
+        $\log \frac{f_l(\mathbf{z})}{f_k(\mathbf{z})} = (\mathbf{\theta}_l - \mathbf{\theta}_k)' \mathbf{\Sigma}^{-1} \mathbf{z} - \frac{1}{2}(\mathbf{\theta_l + \mathbf{\theta}_k})' \mathbf{\Sigma}^{-1} (\mathbf{\theta}_l - \mathbf{\theta}_k) \leq \log ( \frac{w_k}{w_l} )$<br>
+        ($1 \leq l \leq k$, $l \neq k$) である。</li>
+        <li>特徴ベクトル$\mathbf{z}$を動かしたときにどのカテゴリーに判別されるのかを見てみる。</li>
+        <ul>
+          <li>対数尤度比の中で$\mathbf{z}$に依存する項は$(\mathbf{\theta}_l - \mathbf{\theta}_k)' \mathbf{\Sigma}^{-1} \mathbf{z}$のみ。</li>
+          <li>これは$\mathbf{z}に関して線型ある。そのため判別される境界面は線型となる。$</li>
+        </ul>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <article class="flexbox vleft">
+      <h2>4.7 判別分析</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>(フィッシャー)判別分析</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>一種の(教師あり)次元圧縮法</li>
+        <li>ここではカテゴリーが割り当てられた特徴ベクトルのデータを1次元に圧縮するための考え方をざっと見ていきます。</li>
+        <li>ちなみに1次元に圧縮は以下のようなイメージです。</li>
+        <div style="margin-top:20px;text-align:center;">
+          <img src="images/prml-fig4-3a.jpg" style="height:280px;width:auto;" alt="PRML fig.4-3"><br>
+        </div>
+     </ul>
+     <footer class="source">Pattern Recognition and Machine LearningのFig 4.3aより</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>問題設定</h2>
+    </hgroup>
+    <article>
+      <div class="build">
+        <ul class="build">
+          <li>群(カテゴリーに相当)が$K$個ある(前節と同様)。</li>
+          <ul>
+            <li>各群には$n_1, \cdots, n_K$個のケースがある(各カテゴリーに$n_1, \cdots, n_K$の事例があると言い換えてよい)。</li>
+          </ul>
+          <li>$p$個の説明変数$x_1, \cdots, x_p$が異なった値をとる(前節の特徴ベクトルの各要素にほぼ対応)。</li>
+        </ul>
+        <div class="frame-border">
+          <ul class="build mid-spacer">
+            <li>$x_1, \cdots, x_p$の1次元への圧縮(線形変換)は、係数$l_1, \cdots, l_p$を用いて、<br>
+            $L = l_1 x_1 + l_2 x_2 + \cdots + l_p x_p$</li>
+            <li>どのような基準(最適化問題)の下で係数$l_1, \cdots, l_p$を決めるのか?<br>&rarr; $\text{(群間分散)}/\text{(群内分散)}$を最大化(後述)</li>
+          </ul>
+        </div>
+ 
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>群内分散</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>群の中でのばらつきをあらわす尺度。計算する過程を見ていくほうがわかりやすいかも。以下直感的な計算法。</li>
+        <div class="frame-border">
+          <ul>
+            <li>ある群に着目する。</li>
+            <li>その群の平均値を求める (群を表す代表値となっている)。</li>
+            <li>群内のそれぞれのケースについて、平均値(代表値)とのずれの自乗をひたすら足しこむ (自乗和)。</li>
+            <li>これらをすべての群で行ったあとに、(すべてのケースの数) - 1で割る (普遍分散の場合)。</li>
+          </ul>
+        </div>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>群間分散</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>群の間でのばらつきをあらわす尺度。計算する過程を見ていくほうがわかりやすいかも。以下直感的な計算法。</li>
+        <div class="frame-border">
+          <ul>
+            <li>(群ごとではなく)すべてのケースの平均値を取る (全体の代表値となっている)。</li>
+            <li>ある群に着目する。</li>
+            <li>その群の平均値を求める (群を表す代表値となっている)。</li>
+            <li>群の平均値と全体の平均値とのずれの自乗をひたすら足しこむ (自乗和)。</li>
+            <ul>
+              <li>つまり、ケースがとる値を群の平均値に置き換えて、全体の平均とのずれを求める。</li>
+              <li>同じ値が何度も足しこまれることになる。</li>
+            </ul>
+            <li>これらをすべての群で行ったあとに、(すべてのケースの数) - 1で割る(普遍分散の場合)。</li>
+          </ul>
+        </div>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>群内分散と群間分散</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>A国とB国の2群を1人あたりの所得$x$で比べる。</li>
+        <li>A国がB国より所得水準が高いことは、A国の1人とB国の1人の比較では得られない。</li>
+        <li>仮に$\bar{x}_a &gt; \bar{x}_b$であったとしても、A国の所得の低い人とB国の所得の高い人が比べられた場合に上の結論が成り立たないため(右図)。</li>
+        <ul>
+          <li>A,Bそれぞれの中の(群内の)ばらつきが大きい割には、A,B間の(群間の)ばらつきはそれほど大きくはないから。</li>
+        </ul>
+        <li>判別分析では、あるケースがどの群に予測するかを分析するので群内分散、群間分散を使用するのは妥当 &rarr; どのように使われるのか?</li>
+        <div style="text-align:center;">
+          <img src="images/intro-bayes-4-13.png" style="height:120px;width:auto;" alt="群内と群間の考え方"><br>
+        </div>
+      </ul>
+     <footer class="source">「入門ベイズ統計」図4.13より</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>判別分析の係数の定め方</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>線型変換の係数($l_1, \cdots, l_p$)を、変換後の値に関する群間分散がその群内分散に対して相対的に大きい値をとるように定める。</li>
+        <li>固有値問題に帰着される。</li>
+        <div style="margin-top:20px;text-align:center;">
+          <div style="float:left;margin-right:100px;">
+            <img src="images/prml-fig4-3a.jpg" style="height:280px;width:auto;" alt="PRML fig.4-3a"><br>
+          </div>
+          <div style="float:right;margin-left:100px;">
+            <img src="images/prml-fig4-3b.jpg" style="height:280px;width:auto;" alt="PRML fig.4-3b"><br>
+          </div>
+          <br clear="both">
+          </div>
+        </div>
+      </ul>
+      <footer class="source">Pattern Recognition and Machine LearningのFig 4.3a, 4.3bより</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>「あやめ」データの判別分析</h2>
+    </hgroup>
+    <article>
+      <div style="text-align:center;">
+        <img src="images/intro-bayes-4-14.png" style="height:380px;width:auto;" alt="2つの判別分析によるあやめの分類"><br>
+      </div>
+      <ul>
+        <li>1がヴァージニカ、2がヴェルシカラー、3がセトーサ。</li>
+        <li>横軸のみでカテゴリーがほぼ分割できている。</li>
+      </ul>
+     <footer class="source">「入門ベイズ統計」図4.14より</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>まとめ</h2>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>入門ベイズ統計 第4章「ベイズ判別問題とパターン認識」の4.5〜4.7を見ました。</li>
+        <li>ここらへんの内容は<a href="http://www.amazon.co.jp/dp/4274131491" title="わかりやすいパターン認識">「わかりやすいパターン認識」</a>を見たほうがわかりやすいかもしれませんね。</li>
+        <li>余談ですが「わかりやすいパターン認識」が出版されたのは1998年だそうですが、16年の時を経て、なんと、<a href="http://www.amazon.co.jp/dp/427421530X">「続・わかりやすいパターン認識―教師なし学習入門―」</a>が出版されました。こちらも誰か勉強会をやるといいですね。</li>
+      </ul>
+    </article>
+  </slide>
+ 
+  <slide class="backdrop"></slide>
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
