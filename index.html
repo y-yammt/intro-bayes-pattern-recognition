@@ -368,8 +368,8 @@ URL: https://code.google.com/p/io-2012-slides
         <li>同様にカテゴリー$k$を取るときの事後期待損失は、<br>
         $R_k = 1 - \frac{w_k f_k(\mathbf{z})}{P(\mathbf{z})}$</li>
         <li>結局、事後期待損失を最小となるカテゴリ$k$は、<br>
-        $\arg \min_{k} \{1 - \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})}, \cdots, 1 - \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})} \}
-        = \arg \max_k \{w_1 f_1(\mathbf{z}), \cdots, w_1 f_1(\mathbf{z}) \}$<br>
+        $\arg \min_{k} \{1 - \frac{w_1 f_1(\mathbf{z})}{P(\mathbf{z})}, \cdots, 1 - \frac{w_K f_K(\mathbf{z})}{P(\mathbf{z})} \}
+        = \arg \max_k \{w_1 f_1(\mathbf{z}), \cdots, w_K f_K(\mathbf{z}) \}$<br>
         を満たす。</li>
         <li>尤度比の形で書くと、$\frac{f_l(\mathbf{z})}{f_k(\mathbf{z})} \leq \frac{w_k}{w_l}$ ($l \neq k$) となる。</li>
       </ul>
@@ -473,7 +473,7 @@ URL: https://code.google.com/p/io-2012-slides
         <li>群の間でのばらつきをあらわす尺度。計算する過程を見ていくほうがわかりやすいかも。以下直感的な計算法。</li>
         <div class="frame-border">
           <ul>
-            <li>(群ごとではなく)すべてのケースの平均値を取る (全体の代表値となっている)。</li>
+            <li>(群ごとではなく)すべてのケースの平均値を求める (全体の代表値となっている)。</li>
             <li>ある群に着目する。</li>
             <li>その群の平均値を求める (群を表す代表値となっている)。</li>
             <li>群の平均値と全体の平均値とのずれの自乗をひたすら足しこむ (自乗和)。</li>
